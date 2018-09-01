@@ -6,6 +6,9 @@ using System.Text.RegularExpressions;
 
 namespace SmartRename
 {
+    /// <summary>
+    /// Main Application Class
+    /// </summary>
     public class Program
     {
         /// <summary>
@@ -25,11 +28,30 @@ namespace SmartRename
         /// </summary>
         public const string SUB_FIX = "idx,sub,srt";
 
+        /// <summary>
+        /// Represents a possible Action
+        /// </summary>
         public struct SmartName
         {
-            public string OldName, NewName;
+            /// <summary>
+            /// Current Name
+            /// </summary>
+            public string OldName;
+            /// <summary>
+            /// New Name
+            /// </summary>
+            /// <remarks>This is null for actions that don't rename</remarks>
+            public string NewName;
+            /// <summary>
+            /// Action to perform
+            /// </summary>
             public SmartAction Action;
 
+            /// <summary>
+            /// Perform the specified Action
+            /// </summary>
+            /// <returns><see cref="true"/>, if action successfully performed</returns>
+            /// <remarks><see cref="SmartAction.None"/> will always return <see cref="false"/> </remarks>
             public bool ExecuteAction()
             {
                 if (File.Exists(OldName))
@@ -92,13 +114,29 @@ namespace SmartRename
             }
         }
 
+        /// <summary>
+        /// Action Type
+        /// </summary>
         public enum SmartAction
         {
+            /// <summary>
+            /// Don't perform an action
+            /// </summary>
             None,
+            /// <summary>
+            /// Rename File/Directory
+            /// </summary>
             Rename,
+            /// <summary>
+            /// Delete File/Directory
+            /// </summary>
             Delete
         }
 
+        /// <summary>
+        /// Main Entry Point
+        /// </summary>
+        /// <param name="args">Arguments</param>
         public static void Main(string[] args)
         {
 #if DEBUG
@@ -182,6 +220,12 @@ Carefully review the pending changes because they can't be undone.");
 #endif
         }
 
+        /// <summary>
+        /// Ask a Y/N question and wait for proper key
+        /// </summary>
+        /// <param name="Text">Text to print. It is appended by "[Y/N]: "</param>
+        /// <param name="BeepOnError">Beep on wrong key press</param>
+        /// <returns>Y=<see cref="true"/>,N=<see cref="false"/></returns>
         public static bool YN(string Text, bool BeepOnError = true)
         {
             Console.Error.Write("{0} [Y/N]: ", Text);
