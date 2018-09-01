@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("SmartRename")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Converts Stupid Names into Normal Names")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("AyrA.ch")]
+[assembly: AssemblyCompany("Kevin Gut")]
 [assembly: AssemblyProduct("SmartRename")]
-[assembly: AssemblyCopyright("Copyright © AyrA.ch 2018")]
+[assembly: AssemblyCopyright("Copyright © Kevin Gut 2018")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
