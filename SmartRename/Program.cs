@@ -18,7 +18,7 @@ namespace SmartRename
         /// <summary>
         /// Extensions of files to delete
         /// </summary>
-        public const string DEL_EXT = "nfo,lnk,url,sfv,txt,diz";
+        public const string DEL_EXT = "nfo,lnk,url,sfv,txt,diz,html,htm,mht";
         /// <summary>
         /// Directories to delete
         /// </summary>
@@ -164,8 +164,6 @@ Carefully review the pending changes because they can't be undone.");
             //Allow processing of multiple directories
             foreach (var arg in args.SelectMany(m => AyrA.IO.MaskMatch.Match(m, AyrA.IO.MatchType.Directory)))
             {
-                Console.Error.WriteLine(arg);
-                continue;
                 var Actions = GetSmartNames(arg);
                 if (Actions.Length > 0)
                 {
