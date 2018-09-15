@@ -140,7 +140,7 @@ namespace SmartRename
         public static void Main(string[] args)
         {
 #if DEBUG
-            args = @"C:\Users\AyrA\Desktop\Test.2000.test2".Split(' ');
+            args = @"T:\Downloaded\*".Split(' ');
 #endif
             //Check for help
             if (args.Length == 0 || args.Any(m => m == "/?" || m == "--help" || m == "-?"))
@@ -162,8 +162,10 @@ Don't use for games or audio albums.
 Carefully review the pending changes because they can't be undone.");
             }
             //Allow processing of multiple directories
-            foreach (var arg in args)
+            foreach (var arg in args.SelectMany(m => AyrA.IO.MaskMatch.Match(m, AyrA.IO.MatchType.Directory)))
             {
+                Console.Error.WriteLine(arg);
+                continue;
                 var Actions = GetSmartNames(arg);
                 if (Actions.Length > 0)
                 {
@@ -229,9 +231,9 @@ Carefully review the pending changes because they can't be undone.");
         public static bool YN(string Text, bool BeepOnError = true)
         {
             Console.Error.Write("{0} [Y/N]: ", Text);
-            while(true)
+            while (true)
             {
-                switch(Console.ReadKey(true).Key)
+                switch (Console.ReadKey(true).Key)
                 {
                     case ConsoleKey.Y:
                         Console.Error.WriteLine();
