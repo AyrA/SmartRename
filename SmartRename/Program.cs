@@ -250,6 +250,23 @@ Carefully review the pending changes because they can't be undone.");
         }
 
         /// <summary>
+        /// Asks for a string and provides a default
+        /// </summary>
+        /// <param name="Text">Question</param>
+        /// <param name="Default">Default on empty answer</param>
+        /// <returns></returns>
+        public static string Ask(string Text, string Default = "")
+        {
+            Console.Error.Write("{0} [{1}]: ", Text, Default);
+            var Input = Console.ReadLine();
+            if(string.IsNullOrWhiteSpace(Input))
+            {
+                return Default;
+            }
+            return Input;
+        }
+
+        /// <summary>
         /// Gets a shorter name
         /// </summary>
         /// <param name="Dir">File/Directory name</param>
@@ -295,7 +312,9 @@ Carefully review the pending changes because they can't be undone.");
                 var Subtitles = new List<string>();
 
                 //Convert Stupid Name to Normal Name
+                Console.Error.WriteLine("Processing {0}", Path.GetFileName(dirname));
                 segment = R.Match(segment).Groups[1].Value.Replace('.', ' ').Trim();
+                segment = Ask("New Name", segment);
 
                 //Process files first
                 foreach (var F in AllFiles)
@@ -343,21 +362,25 @@ Carefully review the pending changes because they can't be undone.");
                 //Because they are files, do them before directories
                 if (Subtitles.Count > 0)
                 {
-                    //Get the base name (the part of the name all of them have in common)
-                    //Subtitles usually end in a language code or "forced"
-                    //This gets everything up to that point.
-                    //If this breaks we can replace it with an extension stripper and then get the shortest name.
-                    //This works because there is usually at least one subtitle file without any suffix.
-                    //Ideally we would combine these two methods
-                    var BaseLength = Subtitles.Max(m => Path.GetFileNameWithoutExtension(m).LastIndexOfAny(".-_".ToCharArray())) + 1;
-
+                    string IdenticalPart = string.Empty;
+                    int Pos = 0;
+                    var NamesOnly = Subtitles.Select(Path.GetFileName).ToArray();
+                    var ShortestName = Subtitles.Min(m => m.Length);
+                    while (ShortestName > Pos && NamesOnly.All(m => m[Pos] == NamesOnly[0][Pos]))
+                    {
+                        IdenticalPart += NamesOnly[0][Pos];
+                        ++Pos;
+                    }
+                    IdenticalPart = IdenticalPart.TrimEnd('.', '-', '_');
                     foreach (var Sub in Subtitles)
                     {
                         //Rename action for subtitle
                         Renames.Add(new SmartName()
                         {
                             OldName = Sub,
-                            NewName = Path.Combine(Path.GetDirectoryName(Sub), segment + Sub.Substring(Sub.LastIndexOf(Path.DirectorySeparatorChar) + BaseLength)),
+                            NewName = Path.Combine(
+                                Path.GetDirectoryName(Sub),
+                                segment + Path.GetFileName(Sub).Substring(IdenticalPart.Length)),
                             Action = SmartAction.Rename
                         });
                     }
